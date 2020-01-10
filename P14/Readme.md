@@ -203,4 +203,31 @@ Weight Decay: 5e-4
 
 
 
- 
+ ### Trials, Optimizations, Random Tuning & Results
+
+#### 1. Learning rate:
+
+I initially tried first few training sessions with triangular, then triangular 2 and then Exp. However Triangular2 and Exp did not produce any better results than triangular. 
+
+Also with Triangular, I had a check with multi step sizes and found out that among all the other step sizes, the best results were accumulated around 
+
+```python
+4*(len(training_data)/batch_size)
+```
+
+and I was able to get 92% accuracy every 4/5. Max learning rate varied between 0.1 to 0.4 & base learning rate varied between 0.001 to 0.00001. Also i decided to tweak the triangular policy with custom clr_function. The tweaked clr function produced the following curve:
+
+<img src="learning_rate.png" alt="learning rate">
+
+The custom cyclic learning rate function did not come too much for help but this also resulted in 92% every 2/5 time. Custom function was produced using the following code
+
+```python
+clr_fn = lambda x: 0.5*(1+np.sin(x*np.pi/2.5))
+```
+
+
+
+Not to mention that davidnet used an hard coded learning rate function called the piecewise distribution in pytorch & interpolation in numpy. I tried another approach to write this function by producing 2 lines slops with +0.1068 during rising learning rate phase and a -0.01059 during the slanted decreasing learning rate phase. However, on examining the same during training, it disappointed badly and was merely able to produce 83% validation accuracy. I also tried SGD scheduler but it also produced disappointed results. Here is the learning rate curve
+
+<img src="sgd_scheduler.png" alt="sgd scheduler" >
+
