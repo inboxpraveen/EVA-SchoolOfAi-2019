@@ -24,8 +24,7 @@
 
 The network in the base network was simplified during experiments & the simpler architecture code is:
 
-'''python
-
+```python
 def resnet_small():
 
 
@@ -177,8 +176,7 @@ def resnet_small():
 
 
  return model
-
-'''
+```
 
 <img src="Architecture.png" alt="Architecture" >
 
