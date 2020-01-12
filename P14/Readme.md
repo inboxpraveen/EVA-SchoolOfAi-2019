@@ -6,7 +6,7 @@
 
 #### Final results:
 
-##### <u>94.1% Validation Accuracy, 420 Seconds, 20 Epochs</u>
+##### <u>94.1% Validation Accuracy, 416.04 Seconds, 20 Epochs</u>
 
 
 
@@ -35,7 +35,7 @@ def resnet_small():
 
 
 
- \## cluster prep block
+ ## cluster prep block
 
  conv1 = Conv2D(filters=64,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv1",kernel_regularizer=l2(5e-4))(model_input)
 
@@ -45,7 +45,7 @@ def resnet_small():
 
 
 
- \#cluster_layer_1
+ #cluster_layer_1
 
  conv2 = Conv2D(filters=128,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv2",kernel_regularizer=l2(5e-4))(rl1)
 
@@ -59,13 +59,13 @@ def resnet_small():
 
 
 
- \# id1 = Lambda(lambda x: x)(pool1)
+ # id1 = Lambda(lambda x: x)(pool1)
 
 
 
- \#cluster_layer_1_residuals
+ #cluster_layer_1_residuals
 
- \#cluster_layer_1_residual_layer_1
+ #cluster_layer_1_residual_layer_1
 
  conv3 = Conv2D(filters=128,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv3",kernel_regularizer=l2(5e-4))(pool1)
 
@@ -77,7 +77,7 @@ def resnet_small():
 
 
 
- \# cluster_layer_1_residual_layer_2
+ # cluster_layer_1_residual_layer_2
 
  conv4 = Conv2D(filters=128,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv4",kernel_regularizer=l2(5e-4))(drop1)
 
@@ -87,13 +87,13 @@ def resnet_small():
 
 
 
- \#cluster_layer_1_residuals_end
+ #cluster_layer_1_residuals_end
 
  add1 = add([pool1,rl4],name="add1")
 
 
 
- \#cluster_layer_2
+ #cluster_layer_2
 
  conv5 = Conv2D(filters=256,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv5",kernel_regularizer=l2(5e-4))(add1)
 
@@ -107,7 +107,7 @@ def resnet_small():
 
 
 
- \#cluster_layer_3
+ #cluster_layer_3
 
  conv6 = Conv2D(filters=512,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv6",kernel_regularizer=l2(5e-4))(pool2)
 
@@ -121,13 +121,13 @@ def resnet_small():
 
 
 
- \# id2 = Lambda(lambda x: x)(pool3)
+ # id2 = Lambda(lambda x: x)(pool3)
 
 
 
- \#cluster_layer_2_residuals
+ #cluster_layer_2_residuals
 
- \#cluster_layer_2_residual_layer_1
+ #cluster_layer_2_residual_layer_1
 
  conv7 = Conv2D(filters=512,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv7",kernel_regularizer=l2(5e-4))(pool3)
 
@@ -139,7 +139,7 @@ def resnet_small():
 
 
 
- \# cluster_layer_2_residual_layer_2
+ # cluster_layer_2_residual_layer_2
 
  conv8 = Conv2D(filters=512,kernel_size=(3,3),strides=(1,1),padding="same",use_bias=False,name="Conv8",kernel_regularizer=l2(5e-4))(drop2)
 
@@ -149,7 +149,7 @@ def resnet_small():
 
 
 
- \#cluster_layer_2_residuals_end
+ #cluster_layer_2_residuals_end
 
  add2 = add([pool3,rl8],name="add2")
 
@@ -159,7 +159,7 @@ def resnet_small():
 
 
 
- \## flatten & output
+ ## flatten & output
 
  flt = Flatten(name="flatten")(pool4)
 
@@ -169,7 +169,7 @@ def resnet_small():
 
 
 
- \#define model
+ #define model
 
  model = Model(inputs=model_input,outputs=classifier)
 
@@ -230,4 +230,10 @@ clr_fn = lambda x: 0.5*(1+np.sin(x*np.pi/2.5))
 Not to mention that davidnet used an hard coded learning rate function called the piecewise distribution in pytorch & interpolation in numpy. I tried another approach to write this function by producing 2 lines slops with +0.1068 during rising learning rate phase and a -0.01059 during the slanted decreasing learning rate phase. However, on examining the same during training, it disappointed badly and was merely able to produce 83% validation accuracy. I also tried SGD scheduler but it also produced disappointed results. Here is the learning rate curve
 
 <img src="sgd_scheduler.png" alt="sgd scheduler" >
+
+#### 2. Weird Identity Layer
+
+I am still wondering how identity layer would affect the overall accuracy of the architecture. Throughout my experiments, I have observed this weird trend of not able achieve higher accuracy with identity layer when compared to the architecture which is without identity layer. This is the reason why the above network code has identity layer connection commented.
+
+#### 3. Image Augmentation part 1: Rotation, Flip, padding, Gaussian Blur, & Cropping
 
