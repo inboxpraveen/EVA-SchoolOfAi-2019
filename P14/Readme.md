@@ -178,7 +178,7 @@ def resnet_small():
  return model
 ```
 
-<img src="Architecture.png" alt="Architecture" >
+<img src="images/Architecture.png" alt="Architecture" >
 
   
 
@@ -217,7 +217,7 @@ Also with Triangular, I had a check with multi step sizes and found out that amo
 
 and I was able to get 92% accuracy every 4/5. Max learning rate varied between 0.1 to 0.4 & base learning rate varied between 0.001 to 0.00001. Also i decided to tweak the triangular policy with custom clr_function. The tweaked clr function produced the following curve:
 
-<img src="learning_rate.png" alt="learning rate">
+<img src="images/learning_rate.png" alt="learning rate">
 
 The custom cyclic learning rate function did not come too much for help but this also resulted in 92% every 2/5 time. Custom function was produced using the following code
 
@@ -229,7 +229,7 @@ clr_fn = lambda x: 0.5*(1+np.sin(x*np.pi/2.5))
 
 Not to mention that davidnet used an hard coded learning rate function called the piecewise distribution in pytorch & interpolation in numpy. I tried another approach to write this function by producing 2 lines slops with +0.1068 during rising learning rate phase and a -0.01059 during the slanted decreasing learning rate phase. However, on examining the same during training, it disappointed badly and was merely able to produce 83% validation accuracy. I also tried SGD scheduler but it also produced disappointed results. Here is the learning rate curve
 
-<img src="sgd_scheduler.png" alt="sgd scheduler" >
+<img src="images/sgd_scheduler.png" alt="sgd scheduler" >
 
 #### 2. Weird Identity Layer
 
@@ -241,7 +241,7 @@ Rotating the images with +-15 degree was not so helpful, as the accuracy still w
 
 Sample of ImgAug rotation:
 
-<img src="imgaug_rotation.png" alt="imgaug rotation">
+<img src="images/imgaug_rotation.png" alt="imgaug rotation">
 
 Some of the implementations of augmentations were taken from [data-augmentation-using-tensorflow-data-dataset](https://www.wouterbulten.nl/blog/tech/data-augmentation-using-tensorflow-data-dataset/). Its a beautiful yet awesome blog to have a complete idea of image augmentation using tensorflow. Applying all these augmentations still did not increase accuracy to 93%. It was frustrating yet interesting to find our and explore more. 
 
@@ -249,9 +249,9 @@ Some of the implementations of augmentations were taken from [data-augmentation-
 
 Cutout is an advanced image augmentation which randomly cutouts an NxN pixel segment from an image of size MxM. Note that N<M. Here I have taken an sample image and applied cutout 2 times on the same with different normalization values. The first normalization values are between range (0,1) and the second images consists with normalization values in range(0,127). 
 
-<img src="cutout_1.png" alt="cutout1">
+<img src="images/cutout_1.png" alt="cutout1">
 
-<img src="cutout_2.png" alt="cutout2">
+<img src="images/cutout_2.png" alt="cutout2">
 
 Both the images are of frog class but with different normalization values. Cutout boosted accuracy by 0.3% to 0.4% every 4/5 and 3/5 times respectively. The code for cutout is:
 
@@ -361,7 +361,7 @@ class MixupGenerator():
 
 A sample of mixup training set example is
 
-<img src="mixup.png" alt="mixup">
+<img src="images/mixup.png" alt="mixup">
 
 I used mixup along with cutout as a preprocessing function in ImageDataGenerator and it increased my accuracy from 93% to 93.4%. Hence I was able to obtain every 3/5 times. Finally, combining all the previous augmentations as well as current, i was able to cross 93.5% easily and was close to 93.8%. So, now i moved on from experiment notebook the default code provided and added the same there and this base code and was able to cross 94% every 3/5 times run.
 
